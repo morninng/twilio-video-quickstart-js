@@ -44,7 +44,7 @@ const connectOptions = {
   preferredVideoCodecs: [{ codec: 'VP8', simulcast: true }],
 
   // Capture 720p video @ 24 fps.
-  video: { height: 720, frameRate: 24, width: 1280 }
+  video: { height: 720, frameRate: 24, width: 1280 } // size set
 };
 
 // For mobile browsers, limit the maximum incoming video bitrate to 2.5 Mbps.
@@ -91,10 +91,14 @@ async function selectAndJoinRoom(error = null) {
     connectOptions.audio = { 
       deviceId: { exact: deviceIds.audio },
       video: {
-        mode: 'presentation',
-        contentPreferencesMode: 'manual',
-        clientTrackSwitchOffControl: 'auto',
-        dominantSpeakerPriority: 'low'
+        // mode: 'presentation',
+        // contentPreferencesMode: 'manual',
+        // clientTrackSwitchOffControl: 'auto',
+        // dominantSpeakerPriority: 'low',
+        mode: 'grid', // default
+        contentPreferencesMode: 'auto', // default
+        clientTrackSwitchOffControl: 'manual', // default
+        dominantSpeakerPriority: 'standard' // default
       }
    };
 
