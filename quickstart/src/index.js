@@ -88,7 +88,15 @@ async function selectAndJoinRoom(error = null) {
     const token = await response.text();
 
     // Add the specified audio device ID to ConnectOptions.
-    connectOptions.audio = { deviceId: { exact: deviceIds.audio } };
+    connectOptions.audio = { 
+      deviceId: { exact: deviceIds.audio },
+      video: {
+        mode: 'presentation',
+        contentPreferencesMode: 'manual',
+        clientTrackSwitchOffControl: 'auto',
+        dominantSpeakerPriority: 'low'
+      }
+   };
 
     // Add the specified Room name to ConnectOptions.
     connectOptions.name = roomName;
