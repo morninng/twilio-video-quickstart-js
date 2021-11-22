@@ -129,6 +129,9 @@ function attachTrack(track, participant) {
   // If the attached Track is a VideoTrack that is published by the active
   // Participant, then attach it to the main video as well.
   if (track.kind === 'video' && participant === activeParticipant) {
+    track.setContentPreferences({
+      renderDimensions: { width: 1280, height: 720 }
+  });
     track.attach($activeVideo.get(0));
     $activeVideo.css('opacity', '');
   }
