@@ -22,10 +22,14 @@ const connectOptions = {
   // https://www.twilio.com/console/video/configure
   bandwidthProfile: {
     video: {
-      dominantSpeakerPriority: 'high',
-      mode: 'collaboration',
-      clientTrackSwitchOffControl: 'auto',
-      contentPreferencesMode: 'auto'
+        // mode: 'presentation',
+        // contentPreferencesMode: 'manual',
+        // clientTrackSwitchOffControl: 'auto',
+        // dominantSpeakerPriority: 'low',
+        mode: 'grid', // default
+        contentPreferencesMode: 'auto', // default
+        clientTrackSwitchOffControl: 'manual', // default
+        dominantSpeakerPriority: 'standard' // default
     }
   },
 
@@ -90,16 +94,6 @@ async function selectAndJoinRoom(error = null) {
     // Add the specified audio device ID to ConnectOptions.
     connectOptions.audio = { 
       deviceId: { exact: deviceIds.audio },
-      video: {
-        // mode: 'presentation',
-        // contentPreferencesMode: 'manual',
-        // clientTrackSwitchOffControl: 'auto',
-        // dominantSpeakerPriority: 'low',
-        mode: 'grid', // default
-        contentPreferencesMode: 'auto', // default
-        clientTrackSwitchOffControl: 'manual', // default
-        dominantSpeakerPriority: 'standard' // default
-      }
    };
 
     // Add the specified Room name to ConnectOptions.
