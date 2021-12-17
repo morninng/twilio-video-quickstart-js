@@ -75,7 +75,7 @@ function setupParticipantContainer(participant, room) {
   // Add a container for the Participant's media.
   const $container = $(`<div class="participant" data-identity="${identity}" id="${sid}">
     <audio autoplay ${participant === room.localParticipant ? 'muted' : ''} style="opacity: 0"></audio>
-    <video autoplay muted playsinline style="opacity: 0"></video>
+    <video autoplay muted playsinline style="opacity: 0"></video><span>dd</span>
   </div>`);
 
   // Toggle the pinning of the active Participant's video.
@@ -129,9 +129,21 @@ function attachTrack(track, participant) {
   // If the attached Track is a VideoTrack that is published by the active
   // Participant, then attach it to the main video as well.
   if (track.kind === 'video' && participant === activeParticipant) {
+
+
+    // updated part
+
+    
+
+
+
+
+
+
+
     // サイズを設定したところ。リモートつまり対抗となるスマホのサイズ
     track.setContentPreferences({
-      renderDimensions: { width: 1280, height: 720 }
+      renderDimensions: { width: 1280, height: 1280 }
   });
     track.attach($activeVideo.get(0));
     $activeVideo.css('opacity', '');
