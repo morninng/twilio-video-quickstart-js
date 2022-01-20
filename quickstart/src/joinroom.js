@@ -248,16 +248,39 @@ async function joinRoom(token, connectOptions) {
   const room = await connect(token, connectOptions);
   // Save the LocalVideoTrack.
   let localVideoTrack = Array.from(room.localParticipant.videoTracks.values())[0].track;
+  let localTrackPublication =　null
+  console.log("localTrackPublication init")
+  setTimeout( async ()=>{
+    console.log("-----unpublishTrack-----");
+    console.log("-----unpublishTrack-----");
+    console.log("-----unpublishTrack-----");
+    room.localParticipant.unpublishTrack(localVideoTrack);
+    console.log("-----unpublishTrack done -----");
+    console.log("-----unpublishTrack done -----");
+    console.log("-----unpublishTrack done -----");
 
+
+  }, 2000)
   setTimeout( async ()=>{
     console.log("-----priority low is set-----");
     console.log("-----priority low is set-----");
     console.log("-----priority low is set-----");
     console.log("-----priority low is set-----");
-    room.localParticipant.unpublishTrack(localVideoTrack);
-    await room.localParticipant.publishTrack(localVideoTrack, {priority: 'low'} );
-  }, 5000)
-  
+    localTrackPublication = await room.localParticipant.publishTrack(localVideoTrack, {priority: 'low'} );
+
+    console.log("-----priority low is set done-----");
+    console.log("-----priority low is set done-----");
+    console.log("-----priority low is set done-----");
+
+  }, 7000)
+
+  setInterval(()=>{
+    if(localTrackPublication){
+
+      console.log("localTrackPublication.priority", localTrackPublication.priority)
+    }
+  },10000)
+
   // Make the Room available in the JavaScript console for debugging.
   window.room = room;
 
