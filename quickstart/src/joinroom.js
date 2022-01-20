@@ -107,6 +107,8 @@ function setupParticipantContainer(participant, room) {
  * @param priority - null | 'low' | 'standard' | 'high'
  */
 function setVideoPriority(participant, priority) {
+
+  console.log("setVideoPriority");
   participant.videoTracks.forEach(publication => {
     const track = publication.track;
     if (track && track.setPriority) {
@@ -248,7 +250,10 @@ async function joinRoom(token, connectOptions) {
   let localVideoTrack = Array.from(room.localParticipant.videoTracks.values())[0].track;
 
   setTimeout( async ()=>{
-
+    console.log("-----priority low is set-----");
+    console.log("-----priority low is set-----");
+    console.log("-----priority low is set-----");
+    console.log("-----priority low is set-----");
     room.localParticipant.unpublishTrack(localVideoTrack);
     await room.localParticipant.publishTrack(localVideoTrack, {priority: 'low'} );
   }, 5000)
