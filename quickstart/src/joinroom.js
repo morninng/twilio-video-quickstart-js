@@ -244,10 +244,15 @@ async function joinRoom(token, connectOptions) {
 
   // Join to the Room with the given AccessToken and ConnectOptions.
   const room = await connect(token, connectOptions);
-
   // Save the LocalVideoTrack.
   let localVideoTrack = Array.from(room.localParticipant.videoTracks.values())[0].track;
 
+  setTimeout( async ()=>{
+
+    room.localParticipant.unpublishTrack(localVideoTrack);
+    await room.localParticipant.publishTrack(localVideoTrack, {priority: 'low'} );
+  }, 5000)
+  
   // Make the Room available in the JavaScript console for debugging.
   window.room = room;
 
@@ -311,10 +316,14 @@ async function joinRoom(token, connectOptions) {
           // When the app is foregrounded, your app can now continue to
           // capture video frames. So, publish a new LocalVideoTrack.
           localVideoTrack = await createLocalVideoTrack(connectOptions.video);
-          await room.localParticipant.publishTrack(localVideoTrack);
+          await room.localParticipant.publishTrack(localVideoTrack, {priority: 'low'} );
         }
       };
     }
+
+
+
+
 
     room.once('disconnected', (room, error) => {
       // Clear the event handlers on document and window..
