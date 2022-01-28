@@ -123,6 +123,7 @@ function setVideoPriority(participant, priority) {
  * @param participant - the Participant which published the Track
  */
 function attachTrack(track, participant) {
+  console.log("----attachTrack-----")
   // Attach the Participant's Track to the thumbnail.
   const $media = $(`div#${participant.sid} > ${track.kind}`, $participants);
   $media.css('opacity', '');
@@ -139,14 +140,19 @@ function attachTrack(track, participant) {
 
 
 
-
-
-
-
+    if(track.setContentPreferences){
+      console.log(" ------- track.setContentPreferences exist")
+      
     // サイズを設定したところ。リモートつまり対抗となるスマホのサイズ
-    track.setContentPreferences({
-      renderDimensions: { width: 1280, height: 1280 }
-  });
+      track.setContentPreferences({
+        renderDimensions: { width: 1280, height: 1280 }
+      });
+    }else{
+      console.log(" -------  track.setContentPreferences does not exist");
+    }
+
+
+
     track.attach($activeVideo.get(0));
     $activeVideo.css('opacity', '');
   }
@@ -218,6 +224,7 @@ function participantDisconnected(participant, room) {
  * @param participant - the publishing Participant
  */
 function trackPublished(publication, participant) {
+  console.log("------------trackPublished----------");
   // If the TrackPublication is already subscribed to, then attach the Track to the DOM.
   if (publication.track) {
     attachTrack(publication.track, participant);
@@ -225,11 +232,13 @@ function trackPublished(publication, participant) {
 
   // Once the TrackPublication is subscribed to, attach the Track to the DOM.
   publication.on('subscribed', track => {
+    console.log("------------ subscribed ------------");
     attachTrack(track, participant);
   });
 
   // Once the TrackPublication is unsubscribed from, detach the Track from the DOM.
   publication.on('unsubscribed', track => {
+    console.log("------------ unsubscribed ------------")
     detachTrack(track, participant);
   });
 }
