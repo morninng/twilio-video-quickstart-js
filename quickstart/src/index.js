@@ -22,10 +22,14 @@ const connectOptions = {
   // https://www.twilio.com/console/video/configure
   bandwidthProfile: {
     video: {
-      dominantSpeakerPriority: 'high',
-      mode: 'collaboration',
-      clientTrackSwitchOffControl: 'auto',
-      contentPreferencesMode: 'auto'
+        mode: 'presentation',
+        contentPreferencesMode: 'manual',
+        clientTrackSwitchOffControl: 'auto',
+        dominantSpeakerPriority: 'low',
+        // mode: 'grid', // default
+        // contentPreferencesMode: 'auto', // default
+        // clientTrackSwitchOffControl: 'manual', // default
+        // dominantSpeakerPriority: 'standard' // default
     }
   },
 
@@ -41,10 +45,10 @@ const connectOptions = {
   // to adapt your encoded video quality for each RemoteParticipant based on
   // their individual bandwidth constraints. This has no utility if you are
   // using Peer-to-Peer Rooms, so you can comment this line.
-  preferredVideoCodecs: [{ codec: 'VP8', simulcast: true }],
+  preferredVideoCodecs: [{ codec: 'VP8', simulcast: false }],
 
   // Capture 720p video @ 24 fps.
-  video: { height: 720, frameRate: 24, width: 1280 }
+  video: { height: 480, frameRate: 7, width: 640 } // size set
 };
 
 // For mobile browsers, limit the maximum incoming video bitrate to 2.5 Mbps.
@@ -82,13 +86,20 @@ async function selectAndJoinRoom(error = null) {
 
   try {
     // Fetch an AccessToken to join the Room.
-    const response = await fetch(`/token?identity=${identity}`);
+
+    // const response = await fetch(`https://recordingtranscription2.mixidea.org/date_retrieve`, {
+    //   mode: 'cors'
+    // });
 
     // Extract the AccessToken from the Response.
-    const token = await response.text();
+    // const token = await response.text();
+    const token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
 
     // Add the specified audio device ID to ConnectOptions.
-    connectOptions.audio = { deviceId: { exact: deviceIds.audio } };
+    connectOptions.audio = { 
+      deviceId: { exact: deviceIds.audio },
+   };
 
     // Add the specified Room name to ConnectOptions.
     connectOptions.name = roomName;

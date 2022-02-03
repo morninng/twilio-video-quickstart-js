@@ -75,7 +75,7 @@ function setupParticipantContainer(participant, room) {
   // Add a container for the Participant's media.
   const $container = $(`<div class="participant" data-identity="${identity}" id="${sid}">
     <audio autoplay ${participant === room.localParticipant ? 'muted' : ''} style="opacity: 0"></audio>
-    <video autoplay muted playsinline style="opacity: 0"></video>
+    <video autoplay muted playsinline style="opacity: 0"></video><span>dd</span>
   </div>`);
 
   // Toggle the pinning of the active Participant's video.
@@ -107,6 +107,8 @@ function setupParticipantContainer(participant, room) {
  * @param priority - null | 'low' | 'standard' | 'high'
  */
 function setVideoPriority(participant, priority) {
+
+  console.log("setVideoPriority");
   participant.videoTracks.forEach(publication => {
     const track = publication.track;
     if (track && track.setPriority) {
@@ -121,6 +123,7 @@ function setVideoPriority(participant, priority) {
  * @param participant - the Participant which published the Track
  */
 function attachTrack(track, participant) {
+  console.log("----attachTrack-----")
   // Attach the Participant's Track to the thumbnail.
   const $media = $(`div#${participant.sid} > ${track.kind}`, $participants);
   $media.css('opacity', '');
@@ -129,9 +132,27 @@ function attachTrack(track, participant) {
   // If the attached Track is a VideoTrack that is published by the active
   // Participant, then attach it to the main video as well.
   if (track.kind === 'video' && participant === activeParticipant) {
-    track.setContentPreferences({
-      renderDimensions: { width: 1280, height: 720 }
-  });
+
+
+    // updated part
+
+    
+
+
+
+    if(track.setContentPreferences){
+      console.log(" ------- track.setContentPreferences exist")
+      
+    // サイズを設定したところ。リモートつまり対抗となるスマホのサイズ
+      track.setContentPreferences({
+        renderDimensions: { width: 1280, height: 1280 }
+      });
+    }else{
+      console.log(" -------  track.setContentPreferences does not exist");
+    }
+
+
+
     track.attach($activeVideo.get(0));
     $activeVideo.css('opacity', '');
   }
@@ -203,6 +224,7 @@ function participantDisconnected(participant, room) {
  * @param participant - the publishing Participant
  */
 function trackPublished(publication, participant) {
+  console.log("------------trackPublished----------");
   // If the TrackPublication is already subscribed to, then attach the Track to the DOM.
   if (publication.track) {
     attachTrack(publication.track, participant);
@@ -210,11 +232,13 @@ function trackPublished(publication, participant) {
 
   // Once the TrackPublication is subscribed to, attach the Track to the DOM.
   publication.on('subscribed', track => {
+    console.log("------------ subscribed ------------");
     attachTrack(track, participant);
   });
 
   // Once the TrackPublication is unsubscribed from, detach the Track from the DOM.
   publication.on('unsubscribed', track => {
+    console.log("------------ unsubscribed ------------")
     detachTrack(track, participant);
   });
 }
@@ -231,9 +255,40 @@ async function joinRoom(token, connectOptions) {
 
   // Join to the Room with the given AccessToken and ConnectOptions.
   const room = await connect(token, connectOptions);
-
   // Save the LocalVideoTrack.
   let localVideoTrack = Array.from(room.localParticipant.videoTracks.values())[0].track;
+  let localTrackPublication =　null
+  console.log("localTrackPublication init")
+  setTimeout( async ()=>{
+    console.log("-----unpublishTrack-----");
+    console.log("-----unpublishTrack-----");
+    console.log("-----unpublishTrack-----");
+    room.localParticipant.unpublishTrack(localVideoTrack);
+    console.log("-----unpublishTrack done -----");
+    console.log("-----unpublishTrack done -----");
+    console.log("-----unpublishTrack done -----");
+
+
+  }, 2000)
+  setTimeout( async ()=>{
+    console.log("-----priority low is set-----");
+    console.log("-----priority low is set-----");
+    console.log("-----priority low is set-----");
+    console.log("-----priority low is set-----");
+    localTrackPublication = await room.localParticipant.publishTrack(localVideoTrack, {priority: 'low'} );
+
+    console.log("-----priority low is set done-----");
+    console.log("-----priority low is set done-----");
+    console.log("-----priority low is set done-----");
+
+  }, 7000)
+
+  setInterval(()=>{
+    if(localTrackPublication){
+
+      console.log("localTrackPublication.priority", localTrackPublication.priority)
+    }
+  },10000)
 
   // Make the Room available in the JavaScript console for debugging.
   window.room = room;
@@ -298,10 +353,14 @@ async function joinRoom(token, connectOptions) {
           // When the app is foregrounded, your app can now continue to
           // capture video frames. So, publish a new LocalVideoTrack.
           localVideoTrack = await createLocalVideoTrack(connectOptions.video);
-          await room.localParticipant.publishTrack(localVideoTrack);
+          await room.localParticipant.publishTrack(localVideoTrack, {priority: 'low'} );
         }
       };
     }
+
+
+
+
 
     room.once('disconnected', (room, error) => {
       // Clear the event handlers on document and window..
